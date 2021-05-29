@@ -35,3 +35,4 @@ root                    (project root folder)
 ## Authors
 ---
 * Dalton Willard -- willarddalton@byui.edu
+* Mireya Vera -- mveraloo@byui.edu
