@@ -28,14 +28,14 @@ class Director:
         Args:
             self (Director): an instance of Director.
         """
-        self.__keep_playing = True
+        self._keep_playing = True
 
-        self.__board = Board()
-        self.__console = Console()
-        self.__helper = Helper()
-        self.__move = Move()
-        self.__player = Player()
-        self.__roster = Roster()
+        self._board = Board()
+        self._console = Console()
+        self._helper = Helper()
+        self._move = Move()
+        self._player = Player()
+        self._roster = Roster()
 
     def start_game(self):
         """Starts the game loop to control the sequence of play.
@@ -43,4 +43,22 @@ class Director:
         Args:
             self (Director): an instance of Director.
         """
-        pass
+
+        # Print welcome message
+        self._console.show_menu
+        while self._keep_playing:
+            self.__ready_player(1)
+            self.__ready_player(2)
+
+    def __ready_player(self, player = int):
+        """Handles gameplay for player, with player number as int.
+
+        Args:
+            self (Director): 
+        """
+        # Clear and reprint screen
+        # Show prior guesses and hints
+        # Press enter to begin turn
+        # Type (or arrow select) numbers
+        # Press enter to submit
+        # Press enter to hide screen
