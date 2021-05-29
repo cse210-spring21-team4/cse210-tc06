@@ -31,13 +31,14 @@ class Board:
     """
 
     def __init__(self):
-        """
-        The class constructor.
+        """ (AH).
+        The class constructor. Declares and initializes instance Attributes.
 
         Args:
             self (Board): an instance of Board.
         """
-        pass
+        # _items is a dictionary used in Prepare Method.
+        self._items = {}
 
     def prepare(self, player):
         """ (Prepare Method was given in a requirement snippet.)
@@ -64,7 +65,9 @@ class Board:
         Returns:
             Boolean: whether the guess is a four-digit integer.
         """
-        pass
+        if guess.isdigit() and len(guess) == 4:
+            return True
+        return False
 
     def _create_hint(self, code, guess):
         """ (_Create_Hint Method was given in a requirement snippet.)
@@ -100,6 +103,10 @@ class Board:
         Returns:
             None.
         """
+        name = player.get_name()
+        code = self._items[name][0]
+        self._items[name][1] = guess
+        self._items[name][2] = self._create_hint(code, guess)
 
     def info_to_display(self, player):
         """ (AH).
@@ -113,4 +120,6 @@ class Board:
             string: A four-digit integer guess in the form [xxxx].
             string: A hint in the form [xxxx]
         """
-        pass
+        name = player.get_name()
+        # Returns guess and hint.
+        return self._items[name][1], self._items[name][2]
