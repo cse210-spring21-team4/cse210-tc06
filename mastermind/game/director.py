@@ -28,11 +28,32 @@ class Director:
         Args:
             self (Director): an instance of Director.
         """
-        
+        self.__stop_round = False
+
+        self._board = Board()
+        self._console = Console()
+        self._helper = Helper()
+        self._move = Move()
+        self._player = Player()
+        self._roster = Roster()
+
     def start_game(self):
         """Starts the game loop to control the sequence of play.
         
         Args:
             self (Director): an instance of Director.
         """
-        pass
+
+
+        while not self._console.ask_stop_game():
+            self._console.menu()
+            
+            if self._console.ask_stop_game():
+                break
+
+            while not self.__stop_round:
+                for player in self._roster.get_roster():
+                    self._console.play_turn(player)
+        
+        self._console.clear_screen()
+
