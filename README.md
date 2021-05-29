@@ -32,6 +32,14 @@ root                    (project root folder)
 ---
 * Python 3.8.0
 
+## Required Python Modules
+---
+* [inquirer](https://pypi.org/project/inquirer/) `pip install inquirer`
+
 ## Authors
 ---
-* Dalton Willard -- willarddalton@byui.edu
+Sarah Adams, sarahadams2718@gmail.com
+Kelton Green, gre16027@byui.edu
+Dalton Willard, willarddalton@gmail.com
+Agnes Haymore, hay19016@byui.edu
+Mireya Vera Loo, mireyavera1511@gmail.com

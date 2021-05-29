@@ -10,14 +10,16 @@ class Player:
         _name (string): The player's name.
         _move (Move): The player's last move.
     """
-    def __init__(self, name):
+    def __init__(self):
         """The class constructor.
         
         Args:
             self (Player): an instance of Player.
         """
-        self._name = name
+        self._name = ""
         self._move = None
+
+
         
     def get_move(self):
         """Returns a player's last move. If the player 

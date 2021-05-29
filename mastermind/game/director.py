@@ -28,7 +28,7 @@ class Director:
         Args:
             self (Director): an instance of Director.
         """
-        self._keep_playing = True
+        self.__stop_round = False
 
         self._board = Board()
         self._console = Console()
@@ -44,21 +44,16 @@ class Director:
             self (Director): an instance of Director.
         """
 
-        # Print welcome message
-        self._console.show_menu
-        while self._keep_playing:
-            self.__ready_player(1)
-            self.__ready_player(2)
 
-    def __ready_player(self, player = int):
-        """Handles gameplay for player, with player number as int.
+        while not self._console.ask_stop_game():
+            self._console.menu()
+            
+            if self._console.ask_stop_game():
+                break
 
-        Args:
-            self (Director): 
-        """
-        # Clear and reprint screen
-        # Show prior guesses and hints
-        # Press enter to begin turn
-        # Type (or arrow select) numbers
-        # Press enter to submit
-        # Press enter to hide screen
+            while not self.__stop_round:
+                for player in self._roster.get_roster():
+                    self._console.play_turn(player)
+        
+        self._console.clear_screen()
+

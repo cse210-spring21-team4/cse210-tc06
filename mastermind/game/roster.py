@@ -15,16 +15,16 @@ class Roster:
         # self.__current_player = -1
         self.__player_list = []
 
-    def get_player_list(self):
-        """ gets the player list
+    def get_roster(self):
+        """ Returns the list of players.
         
         Args:
             self (Roster): an instance of Roster.
         """
         return self.__player_list
 
-    def add_new_player(self, player):
-        """ adds a new player
+    def add_player(self, player):
+        """ Adds a player to player list.
         
         Args:
             self (Roster): an instance of Roster.
@@ -32,6 +32,17 @@ class Roster:
         """
         if player not in self.__player_list:
             self.__player_list.append(player)
+
+    def remove_player(self, player):
+        """ Removes a player from player list.
+        
+        Args:
+            self (Roster): an instance of Roster.
+            player: the new player to be removed.
+        """
+        if player in self.__player_list:
+            
+            self.__player_list.remove(player)
 
     # def get_current_player(self):
     #     """ gets the current player
