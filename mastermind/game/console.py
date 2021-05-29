@@ -99,9 +99,9 @@ class Console:
             self (Console): an instance of Console.
         """
       
-        while self.__show_menu:
+        while self.__show_menu and not self.__stop_game:
 
-            choice_list = [("Add Player", "add"), "Rules", ("Hi Scores", "scores"), "Quit"]
+            choice_list = [("Add Player", "add"), "Rules", ("Leaderboard", "scores"), "Quit"]
 
             if self._roster.get_roster():
                 choice_list.insert(0, "Start")
@@ -119,7 +119,7 @@ class Console:
             selection = inquirer.prompt(questions)['selection'].lower()
 
             if selection == "start":
-                show_menu = False
+                self.__show_menu = False
             elif selection == "add":
                 self.__add_players()
             elif selection == "rules":
@@ -128,7 +128,6 @@ class Console:
                 self.__show_scoreboard()
             elif selection == "quit":
                 self.__quit()
-                return True
     
 
     def __add_players(self):
