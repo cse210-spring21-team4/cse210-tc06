@@ -58,7 +58,8 @@ class Director:
 
         while not self.__stop_round:
             for player in players:
-                self._console.confirm_start(player)
+                if len(players) > 1:
+                    self._console.confirm_start(player)
                 
                 history = self._player.get_moves(player)
                 guess = self._console.play_turn(player, code, history)

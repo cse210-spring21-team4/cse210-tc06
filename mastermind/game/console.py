@@ -1,16 +1,16 @@
 import os
 import inquirer
-import re
 from time import sleep
 from sys import stdout
 
 from game.roster import Roster
 from game.paint import Paint
 
+
 class Console:
-    """A code template for a person who directs the game. The responsibility of 
+    """A code template for a person who directs the game. The responsibility of
     this class of objects is to control the sequence of play.
-    
+
     Stereotype:
         Service Provider, Interfacer
 
@@ -20,7 +20,7 @@ class Console:
 
     def __init__(self):
         """The class constructor.
-        
+
         Args:
             self (Console): an instance of Console.
         """
@@ -43,7 +43,6 @@ class Console:
             for line in data:
                 self.__rules.append(line)
 
-
     def clear_screen(self):
         """Detects OS type and sends appropriate console command to clear screen.
 
@@ -51,11 +50,10 @@ class Console:
             self (Console): An instance of Console.
         """
         os.system('cls' if os.name == 'nt' else 'clear')
-        
 
     def ask_stop_game(self):
         """Returns bool indicating whether game should continue running.
-        
+
         Args:
             self (Console): an instance of Console.
         """
@@ -63,16 +61,15 @@ class Console:
 
     def restart_menu(self):
         """Returns bool indicating whether game should continue running.
-        
+
         Args:
             self (Console): an instance of Console.
         """
         self.__show_menu = True
 
-
-    def confirm_start(self, player = str):
+    def confirm_start(self, player=str):
         """Returns bool indicating whether game should continue running.
-        
+
         Args:
             self (Console): an instance of Console.
             player (string): name of player for turn confirmation.
@@ -85,10 +82,9 @@ class Console:
 
         return self.stop_game
 
-
-    def cool_print(self, text = str, newline = True):
+    def cool_print(self, text=str, newline=True):
         """Prints text in typewriter style.
-        
+
         Args:
             self (Console): an instance of Console.
             text (str): Text to print.
@@ -96,15 +92,15 @@ class Console:
         """
         print(" " * 21, end='')
         for letter in text:
-            sleep(.03)
+            sleep(.02)
             stdout.write(letter)
             stdout.flush()
         if newline:
             print()
 
-    def play_turn(self, player = str, code = str, history = list, redo = False):
+    def play_turn(self, player=str, code=str, history=list, redo=False):
         """Displays board and prompts for player guess.
-        
+
         Args:
             self (Console): an instance of Console.
             player (string): name of player.
@@ -116,7 +112,7 @@ class Console:
 
         if redo:
             print('\n' * 15)
-            self.cool_print("KEYCODE MUST BE 4-DIGIT NUMBER BETWEEN 1000 AND 9999")
+            self.cool_print("KEYCODE IS 4-DIGIT NUMBER BETWEEN 1000 AND 9999")
             self.cool_print("PRESS ENTER TO RE-ATTEMPT")
             input(" " * 21)
             self.clear_screen()
@@ -126,9 +122,9 @@ class Console:
         self.cool_print("ENTER 4-DIGIT KEYCODE", newline=False)
         return input(":")
 
-    def show_hint(self, hint = str):
+    def show_hint(self, hint=str):
         """Displays hint for player.
-        
+
         Args:
             self (Console): an instance of Console.
             hint (str).
@@ -136,16 +132,15 @@ class Console:
         self.clear_screen()
         print('\n' * 15)
         self.cool_print("ERROR 210.04-TC6: [KEYCODE INCORRECT]")
-        self.cool_print(f"DATA CORRUPTED. ATTEMPTING TO DECRYPT METADATA.")
+        self.cool_print("DATA CORRUPTED. ATTEMPTING TO DECRYPT METADATA.")
         print()
-        sleep(1.2)
+        sleep(.6)
         self.cool_print(f"[!] METADATA RECOVERED: {hint}")
         print()
         self.cool_print("PRESS ENTER TO CLEAR SCREEN", newline=False)
         input()
 
-
-    def __print_logo(self, left = 0, top = 0, bottom = 0):
+    def __print_logo(self, left=0, top=0, bottom=0):
         """Prints logo to screen. Has optional x and y parameters to offset logo
         by specified amount of lines and spaces.
 
@@ -155,7 +150,7 @@ class Console:
             top (int): Number of lines to offset logo from top of screen
             bottom (int): Number of spaces to print below logo
         """
-        
+
         print('\n' * top, end="")
 
         for line in self.__logo:
@@ -163,8 +158,7 @@ class Console:
 
         print('\n' * bottom, end="")
 
-
-    def __print_rules(self, left = 0):
+    def __print_rules(self, left=0):
         """Prints rules to screen. Has optional x and y parameters to offset logo
         by specified amount of lines and spaces.
 
@@ -177,21 +171,25 @@ class Console:
         for line in self.__rules:
             print((" " * left) + line, end="")
 
-
     def menu(self):
         """Shows menu to start game.
-        
+
         Args:
             self (Console): an instance of Console.
         """
-      
+
         while self.__show_menu and not self.stop_game:
-            
+
             p_num = len(self._roster.get_roster()) if self._roster.get_roster() else 0
-            
+
             add_text = "Add/Remove Players [" + str(p_num) + " registered]"
             choice_list = [(add_text, "add"), "Rules", "Quit"]
-            # choice_list = [(add_text, "add"), "Rules", ("Leaderboard", "scores"), "Quit"]
+            # choice_list = [
+            #     (add_text, "add"),
+            #     "Rules",
+            #     ("Leaderboard", "scores"),
+            #     "Quit"
+            #     ]
 
             if self._roster.get_roster():
                 choice_list.insert(1, "START")
@@ -199,13 +197,13 @@ class Console:
             questions = [
                 inquirer.List(
                     'selection',
-                message="MAIN MENU (Use ↑ and ↓ to select, ENTER to confirm)",
-                choices=choice_list,
-                carousel= True)
-                ]
-                
+                    message="MAIN MENU (Use ↑ and ↓ to select, ENTER to confirm)",
+                    choices=choice_list,
+                    carousel=True)
+                    ]
+
             self.clear_screen()
-            self.__print_logo(5,2,2)
+            self.__print_logo(5, 2, 2)
             selection = inquirer.prompt(questions)['selection'].lower()
 
             if selection == "start":
@@ -219,11 +217,10 @@ class Console:
                 self.__show_scoreboard()
             elif selection == "quit":
                 self.__quit()
-    
 
     def __add_players(self):
         """Asks records player names.
-        
+
         Args:
             self (Console): an instance of Console.
         """
@@ -235,14 +232,14 @@ class Console:
         players = [
             inquirer.List(
                 'selection',
-            message="ADD/REMOVE PLAYERS (Use ↑ and ↓ to select, ENTER to confirm)",
-            choices=players_list,
-            default="NEW PLAYER",
-            carousel= True)
+                message="ADD/REMOVE PLAYERS (Use ↑ and ↓ to select, ENTER to confirm)",
+                choices=players_list,
+                default="NEW PLAYER",
+                carousel= True)
             ]
-        
+
         self.clear_screen()
-        self.__print_logo(5,2,2)
+        self.__print_logo(5, 2, 2)
         selection = inquirer.prompt(players)['selection']
 
         if selection == "**menu**":
@@ -252,71 +249,66 @@ class Console:
             if name:
                 self._roster.add_player(name)
         else:
-            delete = inquirer.confirm(f"Do you want to remove '{selection}'?", default = True)
+            delete = inquirer.confirm(
+                f"Do you want to remove '{selection}'?", default=True
+                )
             if delete:
                 self._roster.remove_player(selection)
             input(f"'{selection}' removed. Press ENTER to continue.")
 
-
     def __prompt_name(self):
         """Prompts for player name,.
-        
+
         Args:
             self (Console): an instance of Console.
         """
         self.clear_screen()
-        self.__print_logo(5,2,2)
+        self.__print_logo(5, 2, 2)
 
         name = input("Enter new player name and press ENTER:\n")
         if not (2 < len(name) < 16):
             self.clear_screen()
-            self.__print_logo(5,2,2)
+            self.__print_logo(5, 2, 2)
             print("Username must be between 3 and 15 characters.")
             input("Press ENTER to return to player menu.")
         elif name in self._roster.get_roster():
             self.clear_screen()
-            self.__print_logo(5,2,2)
+            self.__print_logo(5, 2, 2)
             print("Player already exists.")
             input("Press ENTER to return to player menu.")
         else:
             return name
-    
 
     def __show_rules(self):
         """Asks records player names.
-        
+
         Args:
             self (Console): an instance of Console.
         """
         self.clear_screen()
-        self.__print_logo(5,2,2)
-        self.__print_rules(left= 20)
+        self.__print_logo(5, 2, 2)
+        self.__print_rules(left=20)
         input()
-    
 
     def __show_scoreboard(self):
         """Asks records player names.
-        
+
         Args:
             self (Console): an instance of Console.
         """
         self.clear_screen()
-        self.__print_logo(5,2,2)
+        self.__print_logo(5, 2, 2)
         input("Here's the screen to show high scores")
-    
 
     def __quit(self):
         """Asks records player names.
-        
+
         Args:
             self (Console): an instance of Console.
         """
         self.clear_screen()
-        self.__print_logo(5,2,2)
+        self.__print_logo(5, 2, 2)
         print('\n'*3)
         self.cool_print("              THANKS FOR PLAYING!")
         sleep(2)
         self.stop_game = True
-
-    
-        
