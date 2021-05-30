@@ -40,10 +40,11 @@ class Director:
         """
         while not self._console.ask_stop_game():
             players = self._console.menu()
+            input('marf')
             if not self._console.ask_stop_game():
                 self.__play_round(players)
+            print("\n"*15)
         self._console.clear_screen()
-
 
 
     def __play_round(self, players= list):
@@ -56,6 +57,8 @@ class Director:
         code = self._board.generate_code()
         self._player = Player(players)
 
+        input(code)
+
         while not self.__stop_round:
             for player in players:
                 self._console.confirm_start(player)
@@ -66,7 +69,24 @@ class Director:
                 while not self._board.validate_guess(guess):
                     guess = self._console.play_turn(player, code, history, redo=True)
 
+                if guess == code:
+                    self.__end_round(player)
+                    self.__stop_round =True
+                    self._console.restart_menu()
+                    break
                 hint = self._board.create_hint(code, guess)
-                
+
                 self._player.record_move(player, (guess, hint))
                 
+
+    def __end_round(self, winner = str):
+        """Announces the winner and ends the round
+        
+        Args:
+            self (Director): an instance of Director.
+            winner (list): name of the victor.
+        """
+        self._console.clear_screen()
+        print("\n"*15)
+        self._console.cool_print(f'           {winner} wins!')
+        input()

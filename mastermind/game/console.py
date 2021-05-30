@@ -28,7 +28,7 @@ class Console:
         self._roster = Roster()
         self._paint = Paint()
 
-        self.__stop_game = False
+        self.stop_game = False
         self.__logo = []
         self.__rules = []
         self.__show_menu = True
@@ -59,7 +59,15 @@ class Console:
         Args:
             self (Console): an instance of Console.
         """
-        return self.__stop_game
+        return self.stop_game
+
+    def restart_menu(self):
+        """Returns bool indicating whether game should continue running.
+        
+        Args:
+            self (Console): an instance of Console.
+        """
+        self.__show_menu = True
 
 
     def confirm_start(self, player = str):
@@ -75,7 +83,7 @@ class Console:
         print(f"{pass_text : ^100}")
         input(f"{'Press ENTER when ready.' : ^100}")
 
-        return self.__stop_game
+        return self.stop_game
 
 
     def cool_print(self, text = str, newline = True):
@@ -88,7 +96,7 @@ class Console:
         """
         print(" " * 21, end='')
         for letter in text:
-            sleep(.05)
+            sleep(.03)
             stdout.write(letter)
             stdout.flush()
         if newline:
@@ -159,7 +167,7 @@ class Console:
             self (Console): an instance of Console.
         """
       
-        while self.__show_menu and not self.__stop_game:
+        while self.__show_menu and not self.stop_game:
             
             p_num = len(self._roster.get_roster()) if self._roster.get_roster() else 0
             
@@ -290,7 +298,7 @@ class Console:
         print('\n\n')
         print(f"{'THANKS FOR PLAYING!' : ^100}")
         sleep(2)
-        self.__stop_game = True
+        self.stop_game = True
 
     
         
