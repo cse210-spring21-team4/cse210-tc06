@@ -28,8 +28,8 @@ class Director:
             self (Director): an instance of Director.
         """
         self.__stop_round = False
-        self.__roster = Roster().get_roster()
 
+        self._roster = Roster()
         self._board = Board()
         self._console = Console()
         self._move = None
@@ -44,14 +44,15 @@ class Director:
 
 
         while not self._console.ask_stop_game():
-            self._console.menu()
-            
+            players = self._console.menu()
+
             if self._console.ask_stop_game():
                 break
 
             while not self.__stop_round:
-                for player in self.__roster:
-                    self._console.play_turn(player)
+                for player in players:
+                    self._console.confirm_start(player)
+                    # self._console.play_turn(player)
         
         self._console.clear_screen()
 

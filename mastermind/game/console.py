@@ -59,6 +59,22 @@ class Console:
         return self.__stop_game
 
 
+    def confirm_start(self, player = str):
+        """Returns bool indicating whether game should continue running.
+        
+        Args:
+            self (Console): an instance of Console.
+            player (string): name of player for turn confirmation.
+        """
+        self.clear_screen()
+        print("\n" * 11)
+        pass_text = "Pass the device to " + player
+        print(f"{pass_text : ^100}")
+        input(f"{'Press ENTER when ready.' : ^100}")
+
+        return self.__stop_game
+
+
     def __print_logo(self, left = 0, top = 0, bottom = 0):
         """Prints logo to screen. Has optional x and y parameters to offset logo
         by specified amount of lines and spaces.
@@ -125,6 +141,7 @@ class Console:
 
             if selection == "start":
                 self.__show_menu = False
+                return self._roster.get_roster()
             elif selection == "add":
                 self.__add_players()
             elif selection == "rules":
