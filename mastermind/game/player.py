@@ -9,13 +9,14 @@ class Player:
         _name (string): The player's name.
         _move (Move): The player's last move.
     """
-    def __init__(self):
+    def __init__(self, players = list):
         """The class constructor.
         
         Args:
             self (Player): an instance of Player.
+            players (list): a list of player names
         """
-        self.__moves = {}
+        self.__moves = {player:[] for player in players}
 
 
         

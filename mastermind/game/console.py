@@ -2,6 +2,7 @@ import os
 import inquirer
 import re
 from time import sleep
+from sys import stdout
 
 from game.roster import Roster
 from game.paint import Paint
@@ -76,7 +77,24 @@ class Console:
 
         return self.__stop_game
 
-    def play_turn(self, player = str, code = str, history = list):
+
+    def cool_print(self, text = str, newline = True):
+        """Prints text in typewriter style.
+        
+        Args:
+            self (Console): an instance of Console.
+            text (str): Text to print.
+            newline (bool): whether to end with carriage return
+        """
+        print(" " * 21, end='')
+        for letter in text:
+            sleep(.05)
+            stdout.write(letter)
+            stdout.flush()
+        if newline:
+            print()
+
+    def play_turn(self, player = str, code = str, history = list, redo = False):
         """Displays board and prompts for player guess.
         
         Args:
@@ -84,9 +102,21 @@ class Console:
             player (string): name of player.
             code (string): code to be guessed, for hint generation.
             history (list): list of (guess, hint) tuples.
+            redo (bool): whether this is a repeat prompt due to invalid guess.
         """
+        self.clear_screen()
+
+        if redo:
+            print('\n' * 15)
+            self.cool_print("KEYCODE MUST BE 4-DIGIT NUMBER BETWEEN 1000 AND 9999")
+            self.cool_print("PRESS ENTER TO RE-ATTEMPT")
+            input(" " * 21)
+            self.clear_screen()
+
         self._paint.paint_screen(player, history)
-        input("Did it print?")
+        self.cool_print("RUNNING: d42k_10ckp1ck32.exe")
+        self.cool_print("ENTER 4-DIGIT KEYCODE", newline=False)
+        return input(":")
 
 
     def __print_logo(self, left = 0, top = 0, bottom = 0):

@@ -45,8 +45,13 @@ class Paint:
         """
         print(self.__top)
         self.__paint_header(player)
-        for i in range(1,14):
-            self.__paint_line(str(i), str(i + 2))
+        for entry in history:
+            self.__paint_line(entry[0], entry[1])
+        if len(history) < 13:
+            i = 0
+            while i < (13 - len(history)):
+                i += 1
+                self.__paint_line('-', '-')
         print(self.__bottom)
 
     def __paint_header(self, player = str):

@@ -30,7 +30,6 @@ class Director:
 
         self._board = Board()
         self._console = Console()
-        self._player = Player()
 
 
     def run_game(self):
@@ -55,18 +54,19 @@ class Director:
             players (list): a list of player names.
         """
         code = self._board.generate_code()
+        self._player = Player(players)
 
         while not self.__stop_round:
             for player in players:
                 self._console.confirm_start(player)
                 
-                guess = None
-                history = self._player.get_moves()
+                history = self._player.get_moves(player)
+                guess = self._console.play_turn(player, code, history)
                                
                 while not self._board.validate_guess(guess):
-                    guess = self._console.play_turn(player, code, history)
+                    guess = self._console.play_turn(player, code, history, redo=True)
 
                 hint = self._board.create_hint(code, guess)
-
+                
                 self._player.record_move(player, (guess, hint))
                 

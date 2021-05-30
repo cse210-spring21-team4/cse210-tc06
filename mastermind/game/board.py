@@ -89,7 +89,7 @@ class Board:
         name = player.get_name()
         code = self._items[name][0]
         self._items[name][1] = guess
-        self._items[name][2] = self._create_hint(code, guess)
+        self._items[name][2] = self.create_hint(code, guess)
 
     def info_to_display(self, player):
         """ (AH).
