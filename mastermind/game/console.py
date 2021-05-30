@@ -74,6 +74,17 @@ class Console:
 
         return self.__stop_game
 
+    def play_turn(self, player = str, code = str, history = list)):
+        """Displays board and prompts for player guess.
+        
+        Args:
+            self (Console): an instance of Console.
+            player (string): name of player.
+            code (string): code to be guessed, for hint generation.
+            history (list): list of (guess, hint) tuples.
+        """
+        
+
 
     def __print_logo(self, left = 0, top = 0, bottom = 0):
         """Prints logo to screen. Has optional x and y parameters to offset logo
@@ -118,14 +129,13 @@ class Console:
         while self.__show_menu and not self.__stop_game:
             
             p_num = len(self._roster.get_roster()) if self._roster.get_roster() else 0
-
             
-            add_text = "Add Player [" + str(p_num) + " registered]"
-            
-            choice_list = [(add_text, "add"), "Rules", ("Leaderboard", "scores"), "Quit"]
+            add_text = "Add/Remove Players [" + str(p_num) + " registered]"
+            choice_list = [(add_text, "add"), "Rules", "Quit"]
+            # choice_list = [(add_text, "add"), "Rules", ("Leaderboard", "scores"), "Quit"]
 
             if self._roster.get_roster():
-                choice_list.insert(0, "Start")
+                choice_list.insert(1, "START")
 
             questions = [
                 inquirer.List(
@@ -158,39 +168,35 @@ class Console:
         Args:
             self (Console): an instance of Console.
         """
-        keep_open = True
+        players_list = []
+        players_list.extend([("NEW PLAYER", "**new**")])
+        players_list.extend(self._roster.get_roster())
+        players_list.extend([("BACK TO MENU", "**menu**")])
 
+        players = [
+            inquirer.List(
+                'selection',
+            message="ADD/REMOVE PLAYERS (Use ↑ and ↓ to select, ENTER to confirm)",
+            choices=players_list,
+            default="NEW PLAYER",
+            carousel= True)
+            ]
+        
+        self.clear_screen()
+        self.__print_logo(5,2,2)
+        selection = inquirer.prompt(players)['selection']
 
-        while keep_open:
-            players_list = []
-            players_list.extend([("NEW PLAYER", "**new**")])
-            players_list.extend(self._roster.get_roster())
-            players_list.extend([("BACK TO MENU", "**menu**")])
-
-            players = [
-                inquirer.List(
-                    'selection',
-                message="ADD/REMOVE PLAYERS (Use ↑ and ↓ to select, ENTER to confirm)",
-                choices=players_list,
-                default="NEW PLAYER",
-                carousel= True)
-                ]
-            
-            self.clear_screen()
-            self.__print_logo(5,2,2)
-            selection = inquirer.prompt(players)['selection']
-
-            if selection == "**menu**":
-                keep_open = False
-            elif selection == "**new**":
-                name = self.__prompt_name()
-                if name:
-                    self._roster.add_player(name)
-            else:
-                delete = inquirer.confirm(f"Do you want to remove '{selection}'?", default = True)
-                if delete:
-                    self._roster.remove_player(selection)
-                input(f"'{selection}' removed. Press ENTER to continue.")
+        if selection == "**menu**":
+            pass
+        elif selection == "**new**":
+            name = self.__prompt_name()
+            if name:
+                self._roster.add_player(name)
+        else:
+            delete = inquirer.confirm(f"Do you want to remove '{selection}'?", default = True)
+            if delete:
+                self._roster.remove_player(selection)
+            input(f"'{selection}' removed. Press ENTER to continue.")
 
 
     def __prompt_name(self):

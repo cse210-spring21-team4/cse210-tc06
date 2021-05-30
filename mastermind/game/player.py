@@ -26,7 +26,9 @@ class Player:
         Args:
             self (Player): an instance of Player.
         """
-        return self.__moves[player]
+        if player in self.__moves.keys():
+            return self.__moves[player]
+        return None
 
 
     def record_move(self, player = str, move_hint = tuple):
