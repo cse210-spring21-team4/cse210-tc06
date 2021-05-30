@@ -1,6 +1,5 @@
 from game.board import Board
 from game.console import Console
-from game.helper import Helper
 from game.move import Move
 from game.player import Player
 from game.roster import Roster
@@ -33,11 +32,10 @@ class Director:
 
         self._board = Board()
         self._console = Console()
-        self._helper = Helper()
         self._move = None
         self._player = None
 
-    def start_game(self):
+    def run_game(self):
         """Starts the game loop to control the sequence of play.
         
         Args:

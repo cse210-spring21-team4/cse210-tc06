@@ -100,8 +100,13 @@ class Console:
         """
       
         while self.__show_menu and not self.__stop_game:
+            
+            p_num = len(self._roster.get_roster()) if self._roster.get_roster() else 0
 
-            choice_list = [("Add Player", "add"), "Rules", ("Leaderboard", "scores"), "Quit"]
+            
+            add_text = "Add Player [" + str(p_num) + " registered]"
+            
+            choice_list = [(add_text, "add"), "Rules", ("Leaderboard", "scores"), "Quit"]
 
             if self._roster.get_roster():
                 choice_list.insert(0, "Start")

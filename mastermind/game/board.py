@@ -8,18 +8,6 @@ class Board:
     The responsibility of this class of objects is to prepare the gameboard
     with a random four digit number and create hints for the players.
 
-    Mastermind is a game in which each player seeks to guess the secret code
-        they've been assigned before the other players do.
-
-    In the Prepare Method:
-    The code is a randomly generated, four digit number between 1000 and 9999.
-
-    In the _Create_Hint Method:
-    The players take turns guessing the secret code based on the hint that is offered.
-        An x means a correct number in a correct position.
-        An o means a correct number in an incorrect position.
-        An * means an incorrect number (see interface section).
-
     Stereotype:
         Service Provider, Interfacer
 

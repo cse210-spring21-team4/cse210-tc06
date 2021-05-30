@@ -1,7 +1,6 @@
 class Player:
     """A person taking part in a game. 
-       The responsibility of Player is to keep track of their identity 
-       and last move.
+       The responsibility of Player is to record player moves and hints.
     
     Stereotype: 
         Information Holder
@@ -10,39 +9,33 @@ class Player:
         _name (string): The player's name.
         _move (Move): The player's last move.
     """
-    def __init__(self, name):
+    def __init__(self):
         """The class constructor.
         
         Args:
             self (Player): an instance of Player.
         """
-        self._name = name
-        self._move = None
+        self.__moves = {}
 
 
         
-    def get_move(self):
-        """Returns a player's last move. If the player 
+    def get_moves(self, player = str):
+        """Returns a player's move/hint record. If the player 
         hasn't moved yet this method returns None.
 
         Args:
             self (Player): an instance of Player.
         """
-        return self._move
+        return self.__moves[player]
 
-    def get_name(self):
-        """Returns the player's name.
 
-        Args:
-            self (Player): an instance of Player.
-        """
-        return self._name
-
-    def set_move(self, move):
+    def record_move(self, player = str, move_hint = tuple):
         """Sets the player's last move to the given instance of Move.
 
         Args:
             self (Player): an instance of Player.
-            move (Move): an instance of Move
+            move_hint (tuple): a tuple of strings of the player's move, 
+                                followed by the resulting hint.
         """
-        self._move = move
+        current = self.get_moves(player) if self.get_moves(player) else []
+        self.__moves[player] = current.extend(move_hint)
