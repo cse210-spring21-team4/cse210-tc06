@@ -8,24 +8,10 @@ class Board:
     The responsibility of this class of objects is to prepare the gameboard
     with a random four digit number and create hints for the players.
 
-    Mastermind is a game in which each player seeks to guess the secret code
-        they've been assigned before the other players do.
-
-    In the Prepare Method:
-    The code is a randomly generated, four digit number between 1000 and 9999.
-
-    In the _Create_Hint Method:
-    The players take turns guessing the secret code based on the hint that is offered.
-        An x means a correct number in a correct position.
-        An o means a correct number in an incorrect position.
-        An * means an incorrect number (see interface section).
-
     Stereotype:
         Service Provider, Interfacer
 
     Attributes:
-        _method (type): Description of method goes here.
-
         code (integer): a randomly generated four digit number between 1000 and 9999.
         guess (integer): each player guesses a four digit number.
     """
@@ -40,19 +26,14 @@ class Board:
         # _items is a dictionary used in Prepare Method.
         self._items = {}
 
-    def prepare(self, player):
-        """ (Prepare Method was given in a requirement snippet.)
-        Sets up the board with an entry for each player.
+    def generate_code(self):
+        """Sets up the board with an entry for each player.
 
         Args:
             self (Board): an instance of Board.
             player (Player): an instance of Player.  (AH).
         """
-        name = player.get_name()
-        code = str(random.randint(1000, 10000))
-        guess = "----"
-        hint = "****"
-        self._items[name] = [code, guess, hint]
+        return str(random.randint(1000, 10000))
 
     def validate_guess(self, guess):
         """ (AH).
@@ -65,11 +46,13 @@ class Board:
         Returns:
             Boolean: whether the guess is a four-digit integer.
         """
-        if guess.isdigit() and len(guess) == 4:
+        if guess == None:
+            return False
+        elif guess.isdigit() and len(guess) == 4:
             return True
         return False
 
-    def _create_hint(self, code, guess):
+    def create_hint(self, code, guess):
         """ (_Create_Hint Method was given in a requirement snippet.)
         Generates a hint based on the given code and guess.
 
@@ -106,7 +89,7 @@ class Board:
         name = player.get_name()
         code = self._items[name][0]
         self._items[name][1] = guess
-        self._items[name][2] = self._create_hint(code, guess)
+        self._items[name][2] = self.create_hint(code, guess)
 
     def info_to_display(self, player):
         """ (AH).

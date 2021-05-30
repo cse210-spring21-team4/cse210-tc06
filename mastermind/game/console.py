@@ -2,8 +2,10 @@ import os
 import inquirer
 import re
 from time import sleep
+from sys import stdout
 
 from game.roster import Roster
+from game.paint import Paint
 
 class Console:
     """A code template for a person who directs the game. The responsibility of 
@@ -24,8 +26,9 @@ class Console:
         """
 
         self._roster = Roster()
+        self._paint = Paint()
 
-        self.__stop_game = False
+        self.stop_game = False
         self.__logo = []
         self.__rules = []
         self.__show_menu = True
@@ -56,7 +59,90 @@ class Console:
         Args:
             self (Console): an instance of Console.
         """
-        return self.__stop_game
+        return self.stop_game
+
+    def restart_menu(self):
+        """Returns bool indicating whether game should continue running.
+        
+        Args:
+            self (Console): an instance of Console.
+        """
+        self.__show_menu = True
+
+
+    def confirm_start(self, player = str):
+        """Returns bool indicating whether game should continue running.
+        
+        Args:
+            self (Console): an instance of Console.
+            player (string): name of player for turn confirmation.
+        """
+        self.clear_screen()
+        print("\n" * 11)
+        pass_text = "Pass the device to " + player
+        print(f"{pass_text : ^100}")
+        input(f"{'Press ENTER when ready.' : ^100}")
+
+        return self.stop_game
+
+
+    def cool_print(self, text = str, newline = True):
+        """Prints text in typewriter style.
+        
+        Args:
+            self (Console): an instance of Console.
+            text (str): Text to print.
+            newline (bool): whether to end with carriage return
+        """
+        print(" " * 21, end='')
+        for letter in text:
+            sleep(.03)
+            stdout.write(letter)
+            stdout.flush()
+        if newline:
+            print()
+
+    def play_turn(self, player = str, code = str, history = list, redo = False):
+        """Displays board and prompts for player guess.
+        
+        Args:
+            self (Console): an instance of Console.
+            player (string): name of player.
+            code (string): code to be guessed, for hint generation.
+            history (list): list of (guess, hint) tuples.
+            redo (bool): whether this is a repeat prompt due to invalid guess.
+        """
+        self.clear_screen()
+
+        if redo:
+            print('\n' * 15)
+            self.cool_print("KEYCODE MUST BE 4-DIGIT NUMBER BETWEEN 1000 AND 9999")
+            self.cool_print("PRESS ENTER TO RE-ATTEMPT")
+            input(" " * 21)
+            self.clear_screen()
+
+        self._paint.paint_screen(player, history)
+        self.cool_print("RUNNING: d42k_10ckp1ck32.exe")
+        self.cool_print("ENTER 4-DIGIT KEYCODE", newline=False)
+        return input(":")
+
+    def show_hint(self, hint = str):
+        """Displays hint for player.
+        
+        Args:
+            self (Console): an instance of Console.
+            hint (str).
+        """
+        self.clear_screen()
+        print('\n' * 15)
+        self.cool_print("ERROR 210.04-TC6: [KEYCODE INCORRECT]")
+        self.cool_print(f"DATA CORRUPTED. ATTEMPTING TO DECRYPT METADATA.")
+        print()
+        sleep(1.2)
+        self.cool_print(f"[!] METADATA RECOVERED: {hint}")
+        print()
+        self.cool_print("PRESS ENTER TO CLEAR SCREEN", newline=False)
+        input()
 
 
     def __print_logo(self, left = 0, top = 0, bottom = 0):
@@ -99,12 +185,16 @@ class Console:
             self (Console): an instance of Console.
         """
       
-        while self.__show_menu:
-
-            choice_list = [("Add Player", "add"), "Rules", ("Hi Scores", "scores"), "Quit"]
+        while self.__show_menu and not self.stop_game:
+            
+            p_num = len(self._roster.get_roster()) if self._roster.get_roster() else 0
+            
+            add_text = "Add/Remove Players [" + str(p_num) + " registered]"
+            choice_list = [(add_text, "add"), "Rules", "Quit"]
+            # choice_list = [(add_text, "add"), "Rules", ("Leaderboard", "scores"), "Quit"]
 
             if self._roster.get_roster():
-                choice_list.insert(0, "Start")
+                choice_list.insert(1, "START")
 
             questions = [
                 inquirer.List(
@@ -119,7 +209,8 @@ class Console:
             selection = inquirer.prompt(questions)['selection'].lower()
 
             if selection == "start":
-                show_menu = False
+                self.__show_menu = False
+                return self._roster.get_roster()
             elif selection == "add":
                 self.__add_players()
             elif selection == "rules":
@@ -128,7 +219,6 @@ class Console:
                 self.__show_scoreboard()
             elif selection == "quit":
                 self.__quit()
-                return True
     
 
     def __add_players(self):
@@ -137,39 +227,35 @@ class Console:
         Args:
             self (Console): an instance of Console.
         """
-        keep_open = True
+        players_list = []
+        players_list.extend([("NEW PLAYER", "**new**")])
+        players_list.extend(self._roster.get_roster())
+        players_list.extend([("BACK TO MENU", "**menu**")])
 
+        players = [
+            inquirer.List(
+                'selection',
+            message="ADD/REMOVE PLAYERS (Use ↑ and ↓ to select, ENTER to confirm)",
+            choices=players_list,
+            default="NEW PLAYER",
+            carousel= True)
+            ]
+        
+        self.clear_screen()
+        self.__print_logo(5,2,2)
+        selection = inquirer.prompt(players)['selection']
 
-        while keep_open:
-            players_list = []
-            players_list.extend([("NEW PLAYER", "**new**")])
-            players_list.extend(self._roster.get_roster())
-            players_list.extend([("BACK TO MENU", "**menu**")])
-
-            players = [
-                inquirer.List(
-                    'selection',
-                message="ADD/REMOVE PLAYERS (Use ↑ and ↓ to select, ENTER to confirm)",
-                choices=players_list,
-                default="NEW PLAYER",
-                carousel= True)
-                ]
-            
-            self.clear_screen()
-            self.__print_logo(5,2,2)
-            selection = inquirer.prompt(players)['selection']
-
-            if selection == "**menu**":
-                keep_open = False
-            elif selection == "**new**":
-                name = self.__prompt_name()
-                if name:
-                    self._roster.add_player(name)
-            else:
-                delete = inquirer.confirm(f"Do you want to remove '{selection}'?", default = True)
-                if delete:
-                    self._roster.remove_player(selection)
-                input(f"'{selection}' removed. Press ENTER to continue.")
+        if selection == "**menu**":
+            pass
+        elif selection == "**new**":
+            name = self.__prompt_name()
+            if name:
+                self._roster.add_player(name)
+        else:
+            delete = inquirer.confirm(f"Do you want to remove '{selection}'?", default = True)
+            if delete:
+                self._roster.remove_player(selection)
+            input(f"'{selection}' removed. Press ENTER to continue.")
 
 
     def __prompt_name(self):
@@ -227,10 +313,10 @@ class Console:
         """
         self.clear_screen()
         self.__print_logo(5,2,2)
-        print('\n\n')
-        print(f"{'THANKS FOR PLAYING!' : ^100}")
+        print('\n'*3)
+        self.cool_print("              THANKS FOR PLAYING!")
         sleep(2)
-        self.__stop_game = True
+        self.stop_game = True
 
     
         

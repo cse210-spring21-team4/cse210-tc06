@@ -1,7 +1,5 @@
 from game.board import Board
 from game.console import Console
-from game.helper import Helper
-from game.move import Move
 from game.player import Player
 from game.roster import Roster
 
@@ -32,28 +30,64 @@ class Director:
 
         self._board = Board()
         self._console = Console()
-        self._helper = Helper()
-        self._move = Move()
-        self._player = Player()
-        self._roster = Roster()
 
-    def start_game(self):
+
+    def run_game(self):
         """Starts the game loop to control the sequence of play.
         
         Args:
             self (Director): an instance of Director.
         """
-
-
         while not self._console.ask_stop_game():
-            self._console.menu()
-            
-            if self._console.ask_stop_game():
-                break
-
-            while not self.__stop_round:
-                for player in self._roster.get_roster():
-                    self._console.play_turn(player)
-        
+            players = self._console.menu()
+            if not self._console.ask_stop_game():
+                self.__play_round(players)
+            print("\n"*15)
         self._console.clear_screen()
 
+
+    def __play_round(self, players= list):
+        """Runs a round of play and returns a winner.
+        
+        Args:
+            self (Director): an instance of Director.
+            players (list): a list of player names.
+        """
+        code = self._board.generate_code()
+        self._player = Player(players)
+
+        while not self.__stop_round:
+            for player in players:
+                self._console.confirm_start(player)
+                
+                history = self._player.get_moves(player)
+                guess = self._console.play_turn(player, code, history)
+                               
+                while not self._board.validate_guess(guess):
+                    guess = self._console.play_turn(player, code, history, redo=True)
+
+                if guess == code:
+                    self.__end_round(player)
+                    self.__stop_round =True
+                    self._console.restart_menu()
+                    break
+
+                hint = self._board.create_hint(code, guess)
+                self._console.show_hint(hint)
+
+                move_hint = (guess, hint)
+                self._player.record_move(player, move_hint)
+
+                
+
+    def __end_round(self, winner = str):
+        """Announces the winner and ends the round
+        
+        Args:
+            self (Director): an instance of Director.
+            winner (list): name of the victor.
+        """
+        self._console.clear_screen()
+        print("\n"*15)
+        self._console.cool_print(f'           {winner} wins!')
+        input()
