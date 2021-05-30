@@ -40,7 +40,6 @@ class Director:
         """
         while not self._console.ask_stop_game():
             players = self._console.menu()
-            input('marf')
             if not self._console.ask_stop_game():
                 self.__play_round(players)
             print("\n"*15)
@@ -57,8 +56,6 @@ class Director:
         code = self._board.generate_code()
         self._player = Player(players)
 
-        input(code)
-
         while not self.__stop_round:
             for player in players:
                 self._console.confirm_start(player)
@@ -74,9 +71,13 @@ class Director:
                     self.__stop_round =True
                     self._console.restart_menu()
                     break
-                hint = self._board.create_hint(code, guess)
 
-                self._player.record_move(player, (guess, hint))
+                hint = self._board.create_hint(code, guess)
+                self._console.show_hint(hint)
+
+                move_hint = (guess, hint)
+                self._player.record_move(player, move_hint)
+
                 
 
     def __end_round(self, winner = str):

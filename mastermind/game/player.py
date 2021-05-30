@@ -41,4 +41,5 @@ class Player:
                                 followed by the resulting hint.
         """
         current = self.get_moves(player) if self.get_moves(player) else []
-        self.__moves[player] = current.extend(move_hint)
+        self.__moves[player].append(move_hint)
+

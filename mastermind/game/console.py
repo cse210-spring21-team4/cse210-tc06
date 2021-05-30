@@ -126,6 +126,24 @@ class Console:
         self.cool_print("ENTER 4-DIGIT KEYCODE", newline=False)
         return input(":")
 
+    def show_hint(self, hint = str):
+        """Displays hint for player.
+        
+        Args:
+            self (Console): an instance of Console.
+            hint (str).
+        """
+        self.clear_screen()
+        print('\n' * 15)
+        self.cool_print("ERROR 210.04-TC6: [KEYCODE INCORRECT]")
+        self.cool_print(f"DATA CORRUPTED. ATTEMPTING TO DECRYPT METADATA.")
+        print()
+        sleep(1.2)
+        self.cool_print(f"[!] METADATA RECOVERED: {hint}")
+        print()
+        self.cool_print("PRESS ENTER TO CLEAR SCREEN", newline=False)
+        input()
+
 
     def __print_logo(self, left = 0, top = 0, bottom = 0):
         """Prints logo to screen. Has optional x and y parameters to offset logo
@@ -295,8 +313,8 @@ class Console:
         """
         self.clear_screen()
         self.__print_logo(5,2,2)
-        print('\n\n')
-        print(f"{'THANKS FOR PLAYING!' : ^100}")
+        print('\n'*3)
+        self.cool_print("              THANKS FOR PLAYING!")
         sleep(2)
         self.stop_game = True
 
