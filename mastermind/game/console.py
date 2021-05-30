@@ -85,7 +85,7 @@ class Console:
             code (string): code to be guessed, for hint generation.
             history (list): list of (guess, hint) tuples.
         """
-        self._paint.paint_screen()
+        self._paint.paint_screen(player, history)
         input("Did it print?")
 
 
