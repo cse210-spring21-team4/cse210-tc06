@@ -12,8 +12,6 @@ class Board:
         Service Provider, Interfacer
 
     Attributes:
-        _method (type): Description of method goes here.
-
         code (integer): a randomly generated four digit number between 1000 and 9999.
         guess (integer): each player guesses a four digit number.
     """
@@ -48,7 +46,9 @@ class Board:
         Returns:
             Boolean: whether the guess is a four-digit integer.
         """
-        if guess.isdigit() and len(guess) == 4:
+        if guess == None:
+            return False
+        elif guess.isdigit() and len(guess) == 4:
             return True
         return False
 

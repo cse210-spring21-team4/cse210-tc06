@@ -4,6 +4,7 @@ import re
 from time import sleep
 
 from game.roster import Roster
+from game.paint import Paint
 
 class Console:
     """A code template for a person who directs the game. The responsibility of 
@@ -24,6 +25,7 @@ class Console:
         """
 
         self._roster = Roster()
+        self._paint = Paint()
 
         self.__stop_game = False
         self.__logo = []
@@ -74,7 +76,7 @@ class Console:
 
         return self.__stop_game
 
-    def play_turn(self, player = str, code = str, history = list)):
+    def play_turn(self, player = str, code = str, history = list):
         """Displays board and prompts for player guess.
         
         Args:
@@ -83,7 +85,8 @@ class Console:
             code (string): code to be guessed, for hint generation.
             history (list): list of (guess, hint) tuples.
         """
-        
+        self._paint.paint_screen()
+        input("Did it print?")
 
 
     def __print_logo(self, left = 0, top = 0, bottom = 0):
