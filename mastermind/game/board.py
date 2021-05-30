@@ -28,19 +28,14 @@ class Board:
         # _items is a dictionary used in Prepare Method.
         self._items = {}
 
-    def prepare(self, player):
-        """ (Prepare Method was given in a requirement snippet.)
-        Sets up the board with an entry for each player.
+    def generate_code(self):
+        """Sets up the board with an entry for each player.
 
         Args:
             self (Board): an instance of Board.
             player (Player): an instance of Player.  (AH).
         """
-        name = player.get_name()
-        code = str(random.randint(1000, 10000))
-        guess = "----"
-        hint = "****"
-        self._items[name] = [code, guess, hint]
+        return str(random.randint(1000, 10000))
 
     def validate_guess(self, guess):
         """ (AH).
@@ -57,7 +52,7 @@ class Board:
             return True
         return False
 
-    def _create_hint(self, code, guess):
+    def create_hint(self, code, guess):
         """ (_Create_Hint Method was given in a requirement snippet.)
         Generates a hint based on the given code and guess.
 

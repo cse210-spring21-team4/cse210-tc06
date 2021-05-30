@@ -1,6 +1,5 @@
 from game.board import Board
 from game.console import Console
-from game.move import Move
 from game.player import Player
 from game.roster import Roster
 
@@ -29,11 +28,10 @@ class Director:
         """
         self.__stop_round = False
 
-        self._roster = Roster()
         self._board = Board()
         self._console = Console()
-        self._move = None
-        self._player = None
+        self._player = Player()
+
 
     def run_game(self):
         """Starts the game loop to control the sequence of play.
@@ -41,18 +39,34 @@ class Director:
         Args:
             self (Director): an instance of Director.
         """
-
-
         while not self._console.ask_stop_game():
             players = self._console.menu()
-
-            if self._console.ask_stop_game():
-                break
-
-            while not self.__stop_round:
-                for player in players:
-                    self._console.confirm_start(player)
-                    # self._console.play_turn(player)
-        
+            if not self._console.ask_stop_game():
+                self.__play_round(players)
         self._console.clear_screen()
 
+
+
+    def __play_round(self, players= list):
+        """Runs a round of play and returns a winner.
+        
+        Args:
+            self (Director): an instance of Director.
+            players (list): a list of player names.
+        """
+        code = self._board.generate_code()
+
+        while not self.__stop_round:
+            for player in players:
+                self._console.confirm_start(player)
+                
+                guess = None
+                history = self._player.get_moves()
+                               
+                while not self._board.validate_guess(guess):
+                    guess = self._console.play_turn(player, code, history)
+
+                hint = self._board.create_hint(code, guess)
+
+                self._player.record_move(player, (guess, hint))
+                
