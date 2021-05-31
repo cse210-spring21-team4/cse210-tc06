@@ -180,7 +180,9 @@ class Console:
 
         while self.__show_menu and not self.stop_game:
 
-            p_num = len(self._roster.get_roster()) if self._roster.get_roster() else 0
+            p_num = 0
+            if self._roster.get_roster():
+                p_num = len(self._roster.get_roster())
 
             add_text = "Add/Remove Players [" + str(p_num) + " registered]"
             choice_list = [(add_text, "add"), "Rules", "Quit"]
@@ -197,7 +199,7 @@ class Console:
             questions = [
                 inquirer.List(
                     'selection',
-                    message="MAIN MENU (Use ↑ and ↓ to select, ENTER to confirm)",
+                    message="MENU (Use ↑ and ↓ to select, ENTER to confirm)",
                     choices=choice_list,
                     carousel=True)
                     ]
@@ -232,10 +234,10 @@ class Console:
         players = [
             inquirer.List(
                 'selection',
-                message="ADD/REMOVE PLAYERS (Use ↑ and ↓ to select, ENTER to confirm)",
+                message="ADD/REMOVE (Use ↑ and ↓ to select, ENTER to confirm)",
                 choices=players_list,
                 default="NEW PLAYER",
-                carousel= True)
+                carousel=True)
             ]
 
         self.clear_screen()

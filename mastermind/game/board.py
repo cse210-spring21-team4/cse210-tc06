@@ -12,7 +12,7 @@ class Board:
         Service Provider, Interfacer
 
     Attributes:
-        code (integer): a randomly generated four digit number between 1000 and 9999.
+        code (integer): 4-digit number random number between 1000 and 9999.
         guess (integer): each player guesses a four digit number.
     """
 
@@ -46,7 +46,7 @@ class Board:
         Returns:
             Boolean: whether the guess is a four-digit integer.
         """
-        if guess == None:
+        if guess is None:
             return False
         elif guess.isdigit() and len(guess) == 4:
             return True
@@ -93,7 +93,7 @@ class Board:
 
     def info_to_display(self, player):
         """ (AH).
-        Passes current board information for Director to call Console to display.
+        Passes current board info for Director to call Console to display.
 
         Args:
             self (Board): An instance of Board.

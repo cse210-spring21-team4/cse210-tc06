@@ -1,25 +1,26 @@
 class Paint:
     """A code template for a person creating a picture.
-    
+
     Stereotype:
         Service Provider, Interfacer
     """
 
     def __init__(self):
         """The class constructor.
-        
+
         Args:
             self (Console): an instance of Console.
-        
-        All assets in this init method are raw strings, derived from ASCII art by Roland Hangg.
-        Original image may be found at https://www.asciiart.eu/computers/computers
+
+        All assets in this init method are raw strings,
+        derived from ASCII art by Roland Hangg. Original image
+        may be found at https://www.asciiart.eu/computers/computers
         """
         self.__top = r"""                     ________________________________________________
                     /                                                \
                    |    _________________________________________     |"""
-    
+
         self.__left_border = """                   |   |"""
-    
+
         self.__right_border = """|    |"""
 
         self.__bottom = r"""                   |   |_________________________________________|    |
@@ -35,9 +36,9 @@ class Paint:
         :-------------------------------------------------------------------------:
         `---._.-------------------------------------------------------------._.---'"""
 
-    def paint_screen(self, player = str, history = list):
+    def paint_screen(self, player=str, history=list):
         """Creates image of text on an ASCII art computer screen.
-        
+
         Args:
             self (Console): an instance of Console.
             player (string): name of player.
@@ -54,9 +55,9 @@ class Paint:
                 self.__paint_line('-', '-')
         print(self.__bottom)
 
-    def __paint_header(self, player = str):
+    def __paint_header(self, player=str):
         """Paints header text on an ASCII art computer screen.
-        
+
         Args:
             self (Console): an instance of Console.
             player (string): name of player.
@@ -73,15 +74,14 @@ class Paint:
         print(f"{'.......OUTPUT.......':^20}", end='')
         print(self.__right_border)
 
-
-    def __paint_line(self, left_col = str, right_col = str):
+    def __paint_line(self, left_col=str, right_col=str):
         """Paints one line of text, in two columns, on ASCII
         art computer screen.
-        
+
         Args:
             self (Console): an instance of Console.
-            left_col (string): text to paint in left column 
-            right_col (string): text to paint in right column 
+            left_col (string): text to paint in left column
+            right_col (string): text to paint in right column
         """
         print(self.__left_border, end='')
         print(f"{left_col:^20}", end='')

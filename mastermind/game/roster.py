@@ -8,7 +8,7 @@ class Roster:
 
     def __init__(self):
         """The class constructor.
-        
+
         Args:
             self (Roster): an instance of Roster.
         """
@@ -17,7 +17,7 @@ class Roster:
 
     def get_roster(self):
         """ Returns the list of players.
-        
+
         Args:
             self (Roster): an instance of Roster.
         """
@@ -25,7 +25,7 @@ class Roster:
 
     def add_player(self, player):
         """ Adds a player to player list.
-        
+
         Args:
             self (Roster): an instance of Roster.
             player: the new player to be added.
@@ -35,18 +35,18 @@ class Roster:
 
     def remove_player(self, player):
         """ Removes a player from player list.
-        
+
         Args:
             self (Roster): an instance of Roster.
             player: the new player to be removed.
         """
         if player in self.__player_list:
-            
+
             self.__player_list.remove(player)
 
     # def get_current_player(self):
     #     """ gets the current player
-        
+
     #     Args:
     #         self (Roster): an instance of Roster.
     #     """
@@ -54,7 +54,7 @@ class Roster:
 
     # def pass_turn(self):
     #     """ goes to the next players turn
-        
+
     #     Args:
     #         self (Roster): an instance of Roster.
     #     """
