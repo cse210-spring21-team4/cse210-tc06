@@ -9,9 +9,9 @@ class Paint:
         """The class constructor.
 
         Args:
-            self (Console): an instance of Console.
+            self (Paint): an instance of Paint.
 
-        All assets in this init method are raw strings,
+        All assets in this __init__ method are raw strings,
         derived from ASCII art by Roland Hangg. Original image
         may be found at https://www.asciiart.eu/computers/computers
         """

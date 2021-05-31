@@ -29,9 +29,9 @@ class Console:
         self._paint = Paint()
 
         self.stop_game = False
-        self.__logo = []
-        self.__rules = []
         self.__show_menu = True
+        self.__rules = []
+        self.__logo = []
 
         with open("mastermind/assets/logo.txt") as data:
             next(data)
@@ -140,7 +140,7 @@ class Console:
         self.cool_print("PRESS ENTER TO CLEAR SCREEN", newline=False)
         input()
 
-    def __print_logo(self, left=0, top=0, bottom=0):
+    def __print_logo(self, left=5, top=2, bottom=2):
         """Prints logo to screen. Has optional x and y parameters to offset logo
         by specified amount of lines and spaces.
 
@@ -185,27 +185,28 @@ class Console:
                 p_num = len(self._roster.get_roster())
 
             add_text = "Add/Remove Players [" + str(p_num) + " registered]"
-            choice_list = [(add_text, "add"), "Rules", "Quit"]
-            # choice_list = [
-            #     (add_text, "add"),
-            #     "Rules",
-            #     ("Leaderboard", "scores"),
-            #     "Quit"
-            #     ]
+            # choice_list = [(add_text, "add"), "Rules", "Quit"]
+            choice_list = [
+                (add_text, "add"),
+                "Rules",
+                ("Leaderboard", "scores"),
+                "Quit"
+                ]
 
             if self._roster.get_roster():
-                choice_list.insert(1, "START")
+                choice_list.insert(0, "START")
 
             questions = [
                 inquirer.List(
                     'selection',
                     message="MENU (Use ↑ and ↓ to select, ENTER to confirm)",
                     choices=choice_list,
-                    carousel=True)
+                    carousel=True,
+                    default="add")
                     ]
 
             self.clear_screen()
-            self.__print_logo(5, 2, 2)
+            self.__print_logo()
             selection = inquirer.prompt(questions)['selection'].lower()
 
             if selection == "start":
@@ -241,7 +242,7 @@ class Console:
             ]
 
         self.clear_screen()
-        self.__print_logo(5, 2, 2)
+        self.__print_logo()
         selection = inquirer.prompt(players)['selection']
 
         if selection == "**menu**":
@@ -265,17 +266,17 @@ class Console:
             self (Console): an instance of Console.
         """
         self.clear_screen()
-        self.__print_logo(5, 2, 2)
+        self.__print_logo()
 
         name = input("Enter new player name and press ENTER:\n")
         if not (2 < len(name) < 16):
             self.clear_screen()
-            self.__print_logo(5, 2, 2)
+            self.__print_logo()
             print("Username must be between 3 and 15 characters.")
             input("Press ENTER to return to player menu.")
         elif name in self._roster.get_roster():
             self.clear_screen()
-            self.__print_logo(5, 2, 2)
+            self.__print_logo()
             print("Player already exists.")
             input("Press ENTER to return to player menu.")
         else:
@@ -288,7 +289,7 @@ class Console:
             self (Console): an instance of Console.
         """
         self.clear_screen()
-        self.__print_logo(5, 2, 2)
+        self.__print_logo()
         self.__print_rules(left=20)
         input()
 
@@ -299,7 +300,7 @@ class Console:
             self (Console): an instance of Console.
         """
         self.clear_screen()
-        self.__print_logo(5, 2, 2)
+        self.__print_logo()
         input("Here's the screen to show high scores")
 
     def __quit(self):
@@ -309,8 +310,8 @@ class Console:
             self (Console): an instance of Console.
         """
         self.clear_screen()
-        self.__print_logo(5, 2, 2)
+        self.__print_logo()
         print('\n'*3)
-        self.cool_print("              THANKS FOR PLAYING!")
+        self.cool_print("THANKS FOR PLAYING!")
         sleep(2)
         self.stop_game = True

@@ -27,7 +27,6 @@ class Director:
             self (Director): an instance of Director.
         """
         self.__stop_round = False
-
         self._board = Board()
         self._console = Console()
 
