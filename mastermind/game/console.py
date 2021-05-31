@@ -137,7 +137,7 @@ class Console:
         sleep(.6)
         self.cool_print(f"[!] METADATA RECOVERED: {hint}")
         print()
-        self.cool_print("PRESS ENTER TO CLEAR SCREEN", newline=False)
+        self.cool_print("PRESS ENTER TO REATTEMPT", newline=False)
         input()
 
     def __print_logo(self, left=5, top=2, bottom=2):
