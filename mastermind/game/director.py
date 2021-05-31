@@ -1,6 +1,7 @@
 from game.board import Board
 from game.console import Console
 from game.player import Player
+from game.score import Score
 
 
 class Director:
@@ -53,6 +54,7 @@ class Director:
         """
         code = self._board.generate_code()
         self._player = Player(players)
+        self._score = Score(players)
         self.__stop_round = False
 
         while not self.__stop_round:
@@ -61,14 +63,17 @@ class Director:
                     self._console.confirm_start(player)
 
                 history = self._player.get_moves(player)
-                guess = self._console.play_turn(player, code, history)
+                guess, elapsed = self._console.play_turn(player, code, history)
+                self._score.record_turn(elapsed, player)
 
                 while not self._board.validate_guess(guess):
-                    guess = self._console.play_turn(player,
-                                                    code,
-                                                    history,
-                                                    redo=True
-                                                    )
+                    guess, elapsed = self._console.play_turn(
+                        player,
+                        code,
+                        history,
+                        redo=True
+                        )
+                    self._score.record_turn(elapsed, player)
 
                 if guess == code:
                     self.__end_round(player)

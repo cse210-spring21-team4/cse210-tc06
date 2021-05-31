@@ -1,6 +1,6 @@
 import os
 import inquirer
-from time import sleep
+from time import sleep, time
 from sys import stdout
 
 from game.roster import Roster
@@ -79,7 +79,6 @@ class Console:
         pass_text = "Pass the device to " + player
         print(f"{pass_text : ^100}")
         input(f"{'Press ENTER when ready.' : ^100}")
-
         return self.stop_game
 
     def cool_print(self, text=str, newline=True):
@@ -99,7 +98,8 @@ class Console:
             print()
 
     def play_turn(self, player=str, code=str, history=list, redo=False):
-        """Displays board and prompts for player guess.
+        """Displays board and prompts for player guess. Returns tuplet of
+        guess (string) and time taken to guess in seconds (float).
 
         Args:
             self (Console): an instance of Console.
@@ -119,8 +119,16 @@ class Console:
 
         self._paint.paint_screen(player, history)
         self.cool_print("RUNNING: d42k_10ckp1ck32.exe")
-        self.cool_print("ENTER 4-DIGIT KEYCODE", newline=False)
-        return input(":")
+        self.cool_print("ENTER 4-DIGIT KEYCODE:", newline=False)
+
+        start = time()
+
+        guess = input(" ")
+
+        end = time()
+        elapsed = end - start
+
+        return (guess, elapsed)
 
     def show_hint(self, hint=str):
         """Displays hint for player.
@@ -268,7 +276,7 @@ class Console:
         self.clear_screen()
         self.__print_logo()
 
-        name = input("Enter new player name and press ENTER:\n")
+        name = input("[!] Enter new player name and press ENTER:\n\n   ")
         if not (2 < len(name) < 16):
             self.clear_screen()
             self.__print_logo()

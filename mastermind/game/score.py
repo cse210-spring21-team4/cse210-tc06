@@ -1,6 +1,3 @@
-from time import time
-
-
 class Score:
     """A code template for a person keeping track of the number of turns
     each player has taken, as well as how long each turn took.
@@ -20,24 +17,24 @@ class Score:
         self.__start = 0
         self.__end = 0
 
-    def turn_start(self):
-        """Records start time (in seconds, starting at Epoch) of players turn.
+    # def turn_start(self):
+    #     """Records start time of players turn.
 
-        Args:
-            self (Score): an instance of Score.
-        """
-        self.__start = time()
+    #     Args:
+    #         self (Score): an instance of Score.
+    #     """
 
-    def turn_end(self, player=str):
-        """Records end time (in seconds, starting at Epoch) of players turn.
+    #     self.__start = time.time()
+
+    def record_turn(self, elapsed, player=str):
+        """Records end time of players turn.
         Start time is subtracted from end time, and the resulting elapsed time
         is appended to a given player's
 
         Args:
             self (Score): an instance of Score.
         """
-        self.__end = time()
-        self.__turns[player].append(self.__end - self.__start)
+        self.__turns[player].append(elapsed)
 
     def get_scores(self):
         """Returns a dictionary of lists of player turn times, with structure:
