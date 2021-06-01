@@ -2,9 +2,11 @@ import os
 import inquirer
 from time import sleep, time
 from sys import stdout
+from json import load
 
 from game.roster import Roster
 from game.paint import Paint
+from game.score import Score
 
 
 class Console:
@@ -97,7 +99,8 @@ class Console:
         if newline:
             print()
 
-    def play_turn(self, player=str, code=str, history=list, redo=False):
+    def play_turn(self, player=str, code=str, history=list, stats=tuple,
+                  redo=False):
         """Displays board and prompts for player guess. Returns tuplet of
         guess (string) and time taken to guess in seconds (float).
 
@@ -106,6 +109,7 @@ class Console:
             player (string): name of player.
             code (string): code to be guessed, for hint generation.
             history (list): list of (guess, hint) tuples.
+            stats (tuple): Tuple of total round points and playtime of player.
             redo (bool): whether this is a repeat prompt due to invalid guess.
         """
         self.clear_screen()
@@ -117,7 +121,7 @@ class Console:
             input(" " * 21)
             self.clear_screen()
 
-        self._paint.paint_screen(player, history)
+        self._paint.paint_screen(player, history, stats)
         self.cool_print("RUNNING: d42k_10ckp1ck32.exe")
         self.cool_print("ENTER 4-DIGIT KEYCODE:", newline=False)
 
@@ -309,7 +313,12 @@ class Console:
         """
         self.clear_screen()
         self.__print_logo()
-        input("Here's the screen to show high scores")
+        
+        with open("mastermind/assets/scores.json", "r") as data:
+            board = load(data)
+
+        print(board)
+        input()
 
     def __quit(self):
         """Asks records player names.

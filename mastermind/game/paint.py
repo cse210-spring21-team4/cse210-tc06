@@ -36,16 +36,17 @@ class Paint:
         :-------------------------------------------------------------------------:
         `---._.-------------------------------------------------------------._.---'"""
 
-    def paint_screen(self, player=str, history=list):
+    def paint_screen(self, player=str, history=list, stats=tuple):
         """Creates image of text on an ASCII art computer screen.
 
         Args:
             self (Console): an instance of Console.
             player (string): name of player.
             history (list): list of (guess, hint) tuples.
+            stats (tuple): Tuple of total round points and playtime of player.
         """
         print(self.__top)
-        self.__paint_header(player)
+        self.__paint_header(player, stats[0], stats[1])
         for entry in history:
             self.__paint_line(entry[0], entry[1])
         if len(history) < 13:
@@ -55,13 +56,20 @@ class Paint:
                 self.__paint_line('-', '-')
         print(self.__bottom)
 
-    def __paint_header(self, player=str):
+    def __paint_header(self, player=str, points=int, playtime=float):
         """Paints header text on an ASCII art computer screen.
 
         Args:
             self (Console): an instance of Console.
             player (string): name of player.
+            points (int): total points for player for round
+            playtime (float): elapsed time (seconds) of player for round
         """
+
+        stat_text = f" Lock: ENGAGED [{points} @ {playtime:.2f}]"
+        print(self.__left_border, end='')
+        print(f"{stat_text:<41}", end='')
+        print(self.__right_border)
 
         title = " User: " + player + " >> echo $HISTORY"
         print(self.__left_border, end='')
@@ -70,7 +78,7 @@ class Paint:
 
         print(self.__left_border, end='')
         print(f"{'........INPUT.......':^20}", end='')
-        print(f"{'|':^1}", end='')
+        print(f"{'':^1}", end='')
         print(f"{'.......OUTPUT.......':^20}", end='')
         print(self.__right_border)
 
