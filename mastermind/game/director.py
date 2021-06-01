@@ -64,7 +64,6 @@ class Director:
 
                 history = self._player.get_moves(player)
                 stats = self._score.get_stats(player)
-                input(code)
 
                 guess, elapsed = self._console.play_turn(player, code,
                                                          history, stats)
@@ -80,7 +79,7 @@ class Director:
                 if guess == code:
                     stats = self._score.get_stats(player)
                     self._score.update_board(player, stats)
-                    
+
                     self.__end_round(player, stats)
                     self.__stop_round = True
                     self._console.restart_menu()
