@@ -37,5 +37,4 @@ class Player:
             move_hint (tuple): a tuple of strings of the player's move,
                                 followed by the resulting hint.
         """
-        current = self.get_moves(player) if self.get_moves(player) else []
         self.__moves[player].append(move_hint)

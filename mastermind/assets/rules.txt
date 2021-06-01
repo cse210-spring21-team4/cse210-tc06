@@ -1,21 +1,23 @@
         
         Welcome to the high-stakes world of MASTERMIND!
 
-
                             OBJECTIVE
 ---------------------------------------------------------------------
     Be the first to crack the randomly-generated, 4-digit code.
 
+    Leaderboard rankings are based on time elapsed during guesses.
+    Time for loading screens and feedback aren't counted.
+
+    Score is best of 15, with points deducted for each attempt after
+    the first, and each invalid attempt.
 
                             HINT GUIDE
 ---------------------------------------------------------------------
-    x means a correct number in a correct position.
+    x = correct number in a correct position.
 
-    o means a correct number in an incorrect position.
+    o = correct number(s) in an incorrect position.
 
-    * means an incorrect number.
-
-
+    * = incorrect number.
 
 ---------------------------------------------------------------------
                     Press ENTER to return to Menu

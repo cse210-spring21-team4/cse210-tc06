@@ -1,6 +1,7 @@
 from game.board import Board
 from game.console import Console
 from game.player import Player
+from game.score import Score
 
 
 class Director:
@@ -27,7 +28,6 @@ class Director:
             self (Director): an instance of Director.
         """
         self.__stop_round = False
-
         self._board = Board()
         self._console = Console()
 
@@ -54,6 +54,7 @@ class Director:
         """
         code = self._board.generate_code()
         self._player = Player(players)
+        self._score = Score(players)
         self.__stop_round = False
 
         while not self.__stop_round:
@@ -62,17 +63,24 @@ class Director:
                     self._console.confirm_start(player)
 
                 history = self._player.get_moves(player)
-                guess = self._console.play_turn(player, code, history)
+                stats = self._score.get_stats(player)
+
+                guess, elapsed = self._console.play_turn(player, code,
+                                                         history, stats)
+                self._score.record_turn(elapsed, player)
 
                 while not self._board.validate_guess(guess):
-                    guess = self._console.play_turn(player,
-                                                    code,
-                                                    history,
-                                                    redo=True
-                                                    )
+                    stats = self._score.get_stats(player)
+                    guess, elapsed = self._console.play_turn(player, code,
+                                                             history, stats,
+                                                             redo=True)
+                    self._score.record_turn(elapsed, player)
 
                 if guess == code:
-                    self.__end_round(player)
+                    stats = self._score.get_stats(player)
+                    self._score.update_board(player, stats)
+
+                    self.__end_round(player, stats)
                     self.__stop_round = True
                     self._console.restart_menu()
                     break
@@ -83,14 +91,19 @@ class Director:
                 move_hint = (guess, hint)
                 self._player.record_move(player, move_hint)
 
-    def __end_round(self, winner=str):
+    def __end_round(self, winner=str, stats=tuple):
         """Announces the winner and ends the round
 
         Args:
             self (Director): an instance of Director.
             winner (list): name of the victor.
+            stats (tuple): Tuple of total round points and playtime of player.
         """
         self._console.clear_screen()
+        points, time = stats
         print("\n"*15)
         self._console.cool_print(f'           {winner} wins!')
+        print()
+        self._console.cool_print(f'   Points: {points} out of 15')
+        self._console.cool_print(f'     Time: {time:.2f} seconds')
         input()

@@ -1,7 +1,8 @@
 import os
 import inquirer
-from time import sleep
+from time import sleep, time
 from sys import stdout
+from json import load
 
 from game.roster import Roster
 from game.paint import Paint
@@ -29,14 +30,20 @@ class Console:
         self._paint = Paint()
 
         self.stop_game = False
-        self.__logo = []
-        self.__rules = []
         self.__show_menu = True
+        self.__logo = []
+        self.__fame = []
+        self.__rules = []
 
         with open("mastermind/assets/logo.txt") as data:
             next(data)
             for line in data:
                 self.__logo.append(line)
+
+        with open("mastermind/assets/fame.txt") as data:
+            next(data)
+            for line in data:
+                self.__fame.append(line)
 
         with open("mastermind/assets/rules.txt") as data:
             next(data)
@@ -79,10 +86,9 @@ class Console:
         pass_text = "Pass the device to " + player
         print(f"{pass_text : ^100}")
         input(f"{'Press ENTER when ready.' : ^100}")
-
         return self.stop_game
 
-    def cool_print(self, text=str, newline=True):
+    def cool_print(self, text=str, newline=True, margin=21, rate=.02):
         """Prints text in typewriter style.
 
         Args:
@@ -90,7 +96,7 @@ class Console:
             text (str): Text to print.
             newline (bool): whether to end with carriage return
         """
-        print(" " * 21, end='')
+        print(" " * margin, end='')
         for letter in text:
             sleep(.02)
             stdout.write(letter)
@@ -98,14 +104,17 @@ class Console:
         if newline:
             print()
 
-    def play_turn(self, player=str, code=str, history=list, redo=False):
-        """Displays board and prompts for player guess.
+    def play_turn(self, player=str, code=str, history=list, stats=tuple,
+                  redo=False):
+        """Displays board and prompts for player guess. Returns tuplet of
+        guess (string) and time taken to guess in seconds (float).
 
         Args:
             self (Console): an instance of Console.
             player (string): name of player.
             code (string): code to be guessed, for hint generation.
             history (list): list of (guess, hint) tuples.
+            stats (tuple): Tuple of total round points and playtime of player.
             redo (bool): whether this is a repeat prompt due to invalid guess.
         """
         self.clear_screen()
@@ -117,10 +126,18 @@ class Console:
             input(" " * 21)
             self.clear_screen()
 
-        self._paint.paint_screen(player, history)
+        self._paint.paint_screen(player, history, stats)
         self.cool_print("RUNNING: d42k_10ckp1ck32.exe")
-        self.cool_print("ENTER 4-DIGIT KEYCODE", newline=False)
-        return input(":")
+        self.cool_print("ENTER 4-DIGIT KEYCODE:", newline=False)
+
+        start = time()
+
+        guess = input(" ")
+
+        end = time()
+        elapsed = end - start
+
+        return (guess, elapsed)
 
     def show_hint(self, hint=str):
         """Displays hint for player.
@@ -137,10 +154,10 @@ class Console:
         sleep(.6)
         self.cool_print(f"[!] METADATA RECOVERED: {hint}")
         print()
-        self.cool_print("PRESS ENTER TO CLEAR SCREEN", newline=False)
+        self.cool_print("PRESS ENTER TO REATTEMPT", newline=False)
         input()
 
-    def __print_logo(self, left=0, top=0, bottom=0):
+    def __print_logo(self, left=5, top=2, bottom=2):
         """Prints logo to screen. Has optional x and y parameters to offset logo
         by specified amount of lines and spaces.
 
@@ -185,27 +202,27 @@ class Console:
                 p_num = len(self._roster.get_roster())
 
             add_text = "Add/Remove Players [" + str(p_num) + " registered]"
-            choice_list = [(add_text, "add"), "Rules", "Quit"]
-            # choice_list = [
-            #     (add_text, "add"),
-            #     "Rules",
-            #     ("Leaderboard", "scores"),
-            #     "Quit"
-            #     ]
+            choice_list = [
+                (add_text, "add"),
+                "Rules",
+                ("Leaderboard", "scores"),
+                "Quit"
+                ]
 
             if self._roster.get_roster():
-                choice_list.insert(1, "START")
+                choice_list.insert(0, "START")
 
             questions = [
                 inquirer.List(
                     'selection',
                     message="MENU (Use ↑ and ↓ to select, ENTER to confirm)",
                     choices=choice_list,
-                    carousel=True)
+                    carousel=True,
+                    default="add")
                     ]
 
             self.clear_screen()
-            self.__print_logo(5, 2, 2)
+            self.__print_logo()
             selection = inquirer.prompt(questions)['selection'].lower()
 
             if selection == "start":
@@ -241,7 +258,7 @@ class Console:
             ]
 
         self.clear_screen()
-        self.__print_logo(5, 2, 2)
+        self.__print_logo()
         selection = inquirer.prompt(players)['selection']
 
         if selection == "**menu**":
@@ -265,17 +282,17 @@ class Console:
             self (Console): an instance of Console.
         """
         self.clear_screen()
-        self.__print_logo(5, 2, 2)
+        self.__print_logo()
 
-        name = input("Enter new player name and press ENTER:\n")
+        name = input("[!] Enter new player name and press ENTER:\n\n   ")
         if not (2 < len(name) < 16):
             self.clear_screen()
-            self.__print_logo(5, 2, 2)
+            self.__print_logo()
             print("Username must be between 3 and 15 characters.")
             input("Press ENTER to return to player menu.")
         elif name in self._roster.get_roster():
             self.clear_screen()
-            self.__print_logo(5, 2, 2)
+            self.__print_logo()
             print("Player already exists.")
             input("Press ENTER to return to player menu.")
         else:
@@ -288,7 +305,7 @@ class Console:
             self (Console): an instance of Console.
         """
         self.clear_screen()
-        self.__print_logo(5, 2, 2)
+        self.__print_logo()
         self.__print_rules(left=20)
         input()
 
@@ -299,8 +316,38 @@ class Console:
             self (Console): an instance of Console.
         """
         self.clear_screen()
-        self.__print_logo(5, 2, 2)
-        input("Here's the screen to show high scores")
+
+        print('\n' * 2, end="")
+        for line in self.__fame:
+            print((" " * 5) + line, end="")
+        print('\n' * 2, end="")
+
+        with open("mastermind/assets/scores.json", "r") as data:
+            board = list(load(data).items())
+
+        space = " " * 11
+        print(f"{space}RANK     {'PLAYER':<30}" +
+              f"{'TIME':>7} (seconds){'POINTS':>29}\n")
+
+        lines_printed = 0
+        for idx, entry in enumerate(board[:10]):
+            lines_printed += 1
+            space = " " * 10
+            n = idx + 1
+            year, month, day, time = entry[0].split(" ")
+            points = entry[1]["points"]
+            playtime = entry[1]["playtime"]
+            player = entry[1]["player"]
+
+            print(f"{space}{n:>4}.     {player:<30}" +
+                  f"{playtime:>7,.2f}{points:>36}/15")
+
+        lines = "\n" * (12 - lines_printed)
+        print(f"{lines}{space}", end="")
+        sleep(.25)
+        self.cool_print("Press ENTER to return to player menu.",
+                        newline=False, margin=0)
+        input()
 
     def __quit(self):
         """Asks records player names.
@@ -309,8 +356,8 @@ class Console:
             self (Console): an instance of Console.
         """
         self.clear_screen()
-        self.__print_logo(5, 2, 2)
+        self.__print_logo()
         print('\n'*3)
-        self.cool_print("              THANKS FOR PLAYING!")
+        self.cool_print("THANKS FOR PLAYING!")
         sleep(2)
         self.stop_game = True
