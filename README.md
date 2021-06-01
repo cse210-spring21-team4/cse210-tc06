@@ -16,18 +16,6 @@ You can also run the program from an IDE like Visual Studio Code. Start your IDE
 and open the project folder. Select the main module inside the hunter folder and 
 click the "run" icon.
 
-## Project Structure
----
-The project files and folders are organized as follows:
-```
-root                    (project root folder)
-+-- mastermind          (source code for game)
-  +-- game              (specific game classes)
-  +-- __init__.py       (python package file)
-  +-- __main__.py       (entry point for program)
-+-- README.md           (general info)
-```
-
 ## Required Technologies
 ---
 * Python 3.8.0
@@ -38,8 +26,8 @@ root                    (project root folder)
 
 ## Authors
 ---
-Sarah Adams, sarahadams2718@gmail.com
-Kelton Green, gre16027@byui.edu
-Dalton Willard, willarddalton@gmail.com
-Agnes Haymore, hay19016@byui.edu
-Mireya Vera Loo, mireyavera1511@gmail.com
+Dalton W
+Agnes H
+Kelton G
+Sarah A
+Mireya V
